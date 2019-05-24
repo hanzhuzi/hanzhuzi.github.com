@@ -5,15 +5,19 @@
   
 
   
-  <title>2019年博客开篇</title>
+  <title>使用NSURLSession封装网络请求 | 2019年博客开篇</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="2019年博客开篇">
-<meta property="og:url" content="https://hanzhuzi.github.io/index.html">
+  <meta name="description" content="NSURLSessioniOS 7 和 Mac OS X 10.9 Mavericks 中一个显著的变化就是对 Foundation URL 加载系统的彻底重构。在 2013 的 WWDC 上，苹果推出了 NSURLConnection 的继任者：NSURLSession。和NSURLConnection 一样，NSURLSession 指的也不仅是同名类NSURLSession，还包括一系列相互">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用NSURLSession封装网络请求">
+<meta property="og:url" content="https://hanzhuzi.github.io/2019/04/22/使用NSURLSession封装网络请求/index.html">
 <meta property="og:site_name" content="2019年博客开篇">
+<meta property="og:description" content="NSURLSessioniOS 7 和 Mac OS X 10.9 Mavericks 中一个显著的变化就是对 Foundation URL 加载系统的彻底重构。在 2013 的 WWDC 上，苹果推出了 NSURLConnection 的继任者：NSURLSession。和NSURLConnection 一样，NSURLSession 指的也不仅是同名类NSURLSession，还包括一系列相互">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-05-24T09:07:11.808Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2019年博客开篇">
+<meta name="twitter:title" content="使用NSURLSession封装网络请求">
+<meta name="twitter:description" content="NSURLSessioniOS 7 和 Mac OS X 10.9 Mavericks 中一个显著的变化就是对 Foundation URL 加载系统的彻底重构。在 2013 的 WWDC 上，苹果推出了 NSURLConnection 的继任者：NSURLSession。和NSURLConnection 一样，NSURLSession 指的也不仅是同名类NSURLSession，还包括一系列相互">
   
     <link rel="alternate" href="/atom.xml" title="2019年博客开篇" type="application/atom+xml">
   
@@ -60,54 +64,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/05/24/hello-world/" class="article-date">
-  <time datetime="2019-05-24T08:30:44.090Z" itemprop="datePublished">2019-05-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/24/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://hanzhuzi.github.io/2019/05/24/hello-world/" data-id="cjw1uk1fg00010x8590hmsw3a" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-使用NSURLSession封装网络请求" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-使用NSURLSession封装网络请求" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/04/22/使用NSURLSession封装网络请求/" class="article-date">
   <time datetime="2019-04-22T01:57:36.000Z" itemprop="datePublished">2019-04-22</time>
@@ -120,8 +77,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/22/使用NSURLSession封装网络请求/">使用NSURLSession封装网络请求</a>
+    <h1 class="article-title" itemprop="name">
+      使用NSURLSession封装网络请求
     </h1>
   
 
@@ -148,11 +105,23 @@
     </footer>
   </div>
   
-</article>
-
+    
+<nav id="article-nav">
+  
+    <a href="/2019/05/24/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hello World
+        
+      </div>
+    </a>
+  
+  
+</nav>
 
   
-
+</article>
 
 </section>
         
