@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>破心中贼</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="专注iOS开发、学佛、修行">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="破心中贼" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">破心中贼</a>
+    <div class="subtitle">杀贼，杀心中之贼！</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/" class="menu-item-link">Home</a>
+        </li>
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">Archives</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title"></h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2019-11-12</span>
+  </div>
+  <div class="post-content">
+    <p><strong>开源音视频编解码库FFmpeg学习</strong></p>
+<p><strong>一、编译FFmpeg静态库</strong></p>
+<ol>
+<li><p>下载ffmpeg源码压缩包文件，不要直接进行git clone，那样会把git信息也clone下来会比较大。直接到release下载最后一个release的zip包，然后解压到一个目录。还需要下载一个脚本文件gas-preprocessor.pl用于帮助编译ffmpeg。下载地址：<a href="https://github.com/FFmpeg/gas-preprocessor。FFmpeg下载地址：https://github.com/FFmpeg/FFmpeg。" target="_blank" rel="noopener">https://github.com/FFmpeg/gas-preprocessor。FFmpeg下载地址：https://github.com/FFmpeg/FFmpeg。</a> </p>
+</li>
+<li><p>在任何你想编译ffmpeg的地方创建一个目录，将ffmpeg源码拷贝进来。</p>
+</li>
+<li><p>编写编译shell脚本，指定编译选项等，将脚本文件放到与ffmpeg源码同级目录下。</p>
+</li>
+<li><p>将下载的gas-preprocessor.pl拷贝到<strong>/usrlocal/bin</strong>目录下，修改gas-preprocessor.pl文件的权限，<strong>chmod 777 gas-preprocessor.pl</strong> 或者 <strong>chmod +x gas-preprocessor.pl</strong>。</p>
+</li>
+<li><p>cd到编译目录执行编译脚本文件，sh ffmpeg-build.sh arm64 若脚本中有指定参数处理，可以加参数 arm64 armv7等。若没有问题，则开始编译，编译完成后会得到静态库文件和相关头文件。 </p>
+</li>
+</ol>
+<p><strong>注意：若出现以下错误</strong></p>
+<ol>
+<li>xcrun -sdk iphoneos clang is unable to create an executable file. </li>
+</ol>
+<p>​    <strong>C compiler test failed.</strong>   </p>
+<p><strong>解决方法：</strong></p>
+<p>​    <strong>执行命令</strong> sudo xcode-select –switch     /Applications/Xcode.app/Contents/Developer</p>
+<p>​    \2. <strong>GNU assembler not found, install/update gas-preprocessor</strong></p>
+<p><strong>解决方法：</strong></p>
+<p>将下载的gas-preprocessor.pl拷贝到<strong>/usrlocal/bin</strong>目录下，修改gas-preprocessor.pl文件的权限，<strong>chmod 777 gas-preprocessor.pl</strong> 或者 <strong>chmod +x gas-preprocessor.pl</strong>。</p>
+<p><strong>编译脚本 ffmpeg.sh</strong></p>
+<p>#================================== Start  ============================</p>
+<p>#!/bin/bash</p>
+<p>#1、首先：定义下载的库名称（源代码目录名称）</p>
+<p>source=”FFmpeg-4.2”</p>
+<p>#2、其次：定义”.h/.m/.c”文件编译的结果目录</p>
+<p>#目录作用：用于保存.h/.m/.c文件编译后的结果.o文件</p>
+<p>cache=”cache”</p>
+<p>#3、定义”.a”静态库保存目录</p>
+<p>#pwd命令：表示获取当前目录</p>
+<p>staticdir=<code>pwd</code>/“compile-ffmpeg-iOS”</p>
+<p>#4、添加FFmpeg配置选项-&gt;默认配置</p>
+<p>#Toolchain options:工具链选项（指定需要编译平台CPU架构类型，例如：arm64、x86等等…）</p>
+<p>#–enable-cross-compile: 交叉编译</p>
+<p>#Developer options:开发者选项</p>
+<p>#–disable-debug: 禁止使用调试模式</p>
+<p>#Program options选项</p>
+<p>#–disable-programs:禁用程序(不允许建立命令行程序)</p>
+<p>#Documentation options：文档选项</p>
+<p>#–disable-doc：不需要编译文档</p>
+<p>#Toolchain options：工具链选项</p>
+<p>#–enable-pic：允许建立与位置无关代码</p>
+<p>configure_flags=”–enable-cross-compile –disable-debug –disable-programs –disable-doc –enable-pic”</p>
+<p>#核心库(编解码)：avcodec</p>
+<p>configure_flags=”$configure_flags –enable-avdevice –enable-avcodec –enable-avformat”</p>
+<p>configure_flags=”$configure_flags –enable-swresample –enable-swscale –disable-postproc”</p>
+<p>configure_flags=”$configure_flags –enable-avfilter –enable-avutil –enable-avresample “</p>
+<p>#5、定义默认CPU平台架构类型</p>
+<p>#arm64 armv7-&gt;真机-&gt;CPU架构类型</p>
+<p>#x86_64 i386-&gt;模拟器-&gt;CPU架构类型</p>
+<p>archs=”arm64 armv7 x86_64 i386”</p>
+<p>#6、指定我们的这个库编译系统版本-&gt;iOS系统下的9.0以及以上版本使用这个静态库</p>
+<p>targetversion=”9.0”</p>
+<p>#7、接受命令后输入参数</p>
+<p>#我是动态接受命令行输入CPU平台架构类型(输入参数：编译指定的CPU库)</p>
+<p>if [ “$*” ]</p>
+<p>then</p>
+<p>#存在输入参数，也就说：外部指定需要编译CPU架构类型</p>
+<p>archs=”$*”</p>
+<p>fi</p>
+<p>#8、安装汇编器-&gt;yasm</p>
+<p>#判断一下是否存在这个汇编器</p>
+<p>#目的：通过软件管理器(Homebrew)，然后下载安装（或者更新）我的汇编器</p>
+<p>#一个命令就能够帮助我们完成所有的操作</p>
+<p>#错误一：<code>which</code> yasm</p>
+<p>#正确一：<code>which yasm</code></p>
+<p>#<code>which yasm</code>-&gt;检测是否安装了yasm程序</p>
+<p>if [ ! <code>which yasm</code> ]</p>
+<p>then</p>
+<p>#Homebrew:软件管理器</p>
+<p>#下载一个软件管理器:安装、卸载、更新、搜索等等…</p>
+<p>#错误二：<code>which</code> brew</p>
+<p>#正确二：<code>which brew</code></p>
+<p>#<code>which brew</code>-&gt;检测是否安装了软件管理器(Homebrew)</p>
+<p>if [ ! <code>which brew</code> ]</p>
+<p>then</p>
+<p>echo “安装brew”</p>
+<p>ruby -e “$(curl -fsSL <a href="https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;" target="_blank" rel="noopener">https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</a> || exit 1</p>
+<p>fi</p>
+<p>echo “安装yasm”</p>
+<p>#成功了</p>
+<p>#下载安装这个汇编器</p>
+<p>#exit 1-&gt;安装失败了，那么退出程序</p>
+<p>brew install yasm || exit 1</p>
+<p>fi</p>
+<p>echo “循环编译”</p>
+<p>#9、for循环编译FFmpeg静态库</p>
+<p>currentdir=<code>pwd</code></p>
+<p>for arch in $archs</p>
+<p>do</p>
+<p>echo “开始编译”</p>
+<p>#9.1、创建目录</p>
+<p>#在编译结果目录下-创建对应的平台架构类型</p>
+<p>mkdir -p “$cache/$arch”</p>
+<p>#9.2、进入这个目录</p>
+<p>cd “$cache/$arch”</p>
+<p>#9.3、配置编译CPU架构类型-&gt;指定当前编译CPU架构类型</p>
+<p>#错误三：”–arch $arch”</p>
+<p>#正确三：”-arch $arch”</p>
+<p>archflags=”-arch $arch”</p>
+<p>#9.4、判定一下你到底是编译的是模拟器.a静态库，还是真机.a静态库</p>
+<p>if [ “$arch” = “i386” -o “$arch” = “x86_64” ]</p>
+<p>then</p>
+<p>#模拟器</p>
+<p>platform=”iPhoneSimulator”</p>
+<p>#支持最小系统版本-&gt;iOS系统</p>
+<p>archflags=”$archflags -mios-simulator-version-min=$targetversion”</p>
+<p>else</p>
+<p>#真机(mac、iOS都支持)</p>
+<p>platform=”iPhoneOS”</p>
+<p>#支持最小系统版本-&gt;iOS系统</p>
+<p>archflags=”$archflags -mios-version-min=$targetversion -fembed-bitcode”</p>
+<p>#注意:优化处理(可有可无)</p>
+<p>#如果架构类型是”arm64”，那么</p>
+<p>if [ “$arch” = “arm64” ]</p>
+<p>then</p>
+<p>#GNU汇编器（GNU Assembler），简称为GAS</p>
+<p>#GASPP-&gt;汇编器预处理程序</p>
+<p>#解决问题：分段错误</p>
+<p>#通俗一点：就是程序运行时,变量访问越界一类的问题</p>
+<p>EXPORT=”GASPP_FIX_XCODE5=1”</p>
+<p>fi</p>
+<p>fi</p>
+<p>#10、正式编译</p>
+<p>#tr命令可以对来自标准输入的字符进行替换、压缩和删除</p>
+<p>#‘[:upper:]’-&gt;将小写转成大写</p>
+<p>#‘[:lower:]’-&gt;将大写转成小写</p>
+<p>#将platform-&gt;转成大写或者小写</p>
+<p>XCRUN_SDK=<code>echo $platform | tr &#39;[:upper:]&#39; &#39;[:lower:]&#39;</code></p>
+<p>#编译器-&gt;编译平台</p>
+<p>CC=”xcrun -sdk $XCRUN_SDK clang”</p>
+<p>#架构类型-&gt;arm64</p>
+<p>if [ “$arch” = “arm64” ]</p>
+<p>then</p>
+<p>#音视频默认一个编译命令</p>
+<p>#preprocessor.pl帮助我们编译FFmpeg-&gt;arm64位静态库</p>
+<p>AS=”<a href="http://gas-preprocessor.pl/" target="_blank" rel="noopener">gas-preprocessor.pl</a> -arch aarch64 – $CC”</p>
+<p>else</p>
+<p>#默认编译平台</p>
+<p>AS=”$CC”</p>
+<p>fi</p>
+<p>echo “执行到了1”</p>
+<p>#目录找到FFmepg编译源代码目录-&gt;设置编译配置-&gt;编译FFmpeg源码</p>
+<p>#–target-os:目标系统-&gt;darwin(mac系统早起版本名字)</p>
+<p>#darwin:是mac系统、iOS系统祖宗</p>
+<p>#–arch:CPU平台架构类型</p>
+<p>#–cc：指定编译器类型选项</p>
+<p>#–as:汇编程序</p>
+<p>#$configure_flags最初配置</p>
+<p>#–extra-cflags</p>
+<p>#–prefix：静态库输出目录</p>
+<p>TMPDIR=${TMPDIR/%\/} $currentdir/$source/configure \</p>
+<p>–target-os=darwin \</p>
+<p>–arch=$arch \</p>
+<p>–cc=”$CC” \</p>
+<p>–as=”$AS” \</p>
+<p>$configure_flags \</p>
+<p>–extra-cflags=”$archflags” \</p>
+<p>–extra-ldflags=”$archflags” \</p>
+<p>–prefix=”$staticdir/$arch” \</p>
+<p>|| exit 1</p>
+<p>echo “执行了”</p>
+<p>#解决问题-&gt;分段错误问题</p>
+<p>#安装-&gt;导出静态库(编译.a静态库)</p>
+<p>#执行命令</p>
+<p>#将-j设置为支持多核心/线程</p>
+<p>make -j3 install $EXPORT || exit 1</p>
+<p>#回到了我们的脚本文件目录</p>
+<p>cd $currentdir</p>
+<p>done</p>
+<p>#================================== End  ============================</p>
+
+  </div>
+  <div class="post-footer">
+    
+
+    <a href="#top" class="top">Back to Top</a>
+  </div>
+</article>
+<footer>
+  &copy; 2019
+  <span class="author">
+    hanzhuzi
+  </span>
+</footer>
+    </div>
+  </body>
+</html>
